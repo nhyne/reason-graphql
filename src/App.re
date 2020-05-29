@@ -1,7 +1,7 @@
 module TodoLists = [%graphql
   {|
   query TodoLists {
-        getTodoLists(limit: 5) {
+        getTodoList(todoListId: 2) {
         id
         name
     }
@@ -15,12 +15,20 @@ module TodoListQuery = ReasonApollo.CreateQuery(TodoLists);
 let make = () => {
   let todoListsQuery = TodoLists.make();
   <div>
+    <p> {ReasonReact.string("something")} </p>
     <TodoListQuery variables=todoListsQuery##variables>
       ...{({result}) =>
         switch (result) {
         | Loading => <div> {ReasonReact.string("loading...")} </div>
         | Error(error) => <div> {ReasonReact.string(error.message)} </div>
-        | Data(data) => <TodoListList items={data##getTodoLists} />
+        | Data(response) =>
+          <div> {ReasonReact.string("we got data somehow")} </div>
+        //          <div>
+        //            {ReasonReact.string(
+        //               response##getTodoList
+        //               ->Belt.Option.mapWithDefault("default", list => list##name),
+        //             )}
+        //          </div>
         }
       }
     </TodoListQuery>
